@@ -7,7 +7,11 @@
         v-for="item in componentList"
         :draggable="true"
         @dragstart="(e) => dragstart(e, item)"
-        @dragend="(e)=>{dragend(e)}"
+        @dragend="
+          (e) => {
+            dragend(e);
+          }
+        "
       >
         <span>{{ item.label }}</span>
         <component :is="item.preview()"></component>
@@ -25,9 +29,14 @@
           class="editor-container-canvas__content"
           ref="containerRef"
           :style="containerStyles"
+          @mousedown="containerMouseDown"
         >
-          <div v-for="item in data?.blocks">
-            <EditorBlock :block="item"></EditorBlock>
+          <div v-for="block in data.blocks">
+            <EditorBlock
+              :block="block"
+              :class="{ 'editor-block-focus': block.focus }"
+              @mousedown="(e) => blockMouseDown(e, block)"
+            ></EditorBlock>
           </div>
         </div>
       </div>
@@ -38,10 +47,12 @@
 <script setup>
 // @ts-nocheck
 
-import { defineProps, computed, inject, ref, defineEmits,onMounted } from "vue";
+import { defineProps, computed, inject, ref, defineEmits } from "vue";
 import EditorBlock from "./editor-block.vue";
 import { useMenuDragger } from "./useMenuDragger";
-import deepcopy from 'deepcopy'
+import { useFocus } from "./useFocus";
+import { useBlockDragger } from "./useBlockDragger";
+import deepcopy from "deepcopy";
 const props = defineProps({
   modelValue: {
     type: Object,
@@ -53,7 +64,7 @@ const data = computed({
     return props.modelValue;
   },
   set(newValue) {
-    emits("update:modelValue", deepcopy(newValue) );
+    emits("update:modelValue", deepcopy(newValue));
   },
 });
 
@@ -67,8 +78,20 @@ const componentList = config.componentList;
 
 const containerRef = ref(null);
 
-// 实现菜单的拖拽功能
-const {dragstart,dragend} = useMenuDragger(containerRef,data)
+// 1.实现菜单的拖拽功能
+const { dragstart, dragend } = useMenuDragger(containerRef, data);
+
+// 2.实现获取焦点，选中后就可以进行拖拽了
+const { blockMouseDown, focusData, containerMouseDown } = useFocus(
+  data,
+  (e) => {
+    // 获取焦点后进行拖拽
+    mousedown(e);
+  }
+);
+
+// 3.实现组件拖拽
+const { mousedown } = useBlockDragger(focusData);
 </script>
 
 <style lang="scss" scoped>
@@ -141,6 +164,22 @@ const {dragstart,dragend} = useMenuDragger(containerRef,data)
         position: relative;
       }
     }
+  }
+}
+.editor-block {
+  position: absolute;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+.editor-block-focus {
+  &::after {
+    border: 2px dashed red;
   }
 }
 </style>
