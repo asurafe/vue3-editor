@@ -2,7 +2,13 @@
   <div class="edtior">
     <!-- 左侧物料区 -->
     <div class="editor-left">
-      <div class="editor-left-item" v-for="item in componentList">
+      <div
+        class="editor-left-item"
+        v-for="item in componentList"
+        :draggable="true"
+        @dragstart="(e) => dragstart(e, item)"
+        @dragend="(e)=>{dragend(e)}"
+      >
         <span>{{ item.label }}</span>
         <component :is="item.preview()"></component>
       </div>
@@ -15,7 +21,11 @@
       <!-- 产生滚动条 -->
       <div class="editor-container-canvas">
         <!-- 内容区 -->
-        <div class="editor-container-canvas__content" :style="containerStyles">
+        <div
+          class="editor-container-canvas__content"
+          ref="containerRef"
+          :style="containerStyles"
+        >
           <div v-for="item in data?.blocks">
             <EditorBlock :block="item"></EditorBlock>
           </div>
@@ -26,15 +36,25 @@
 </template>
 
 <script setup>
-import { defineProps, computed, inject } from "vue";
+// @ts-nocheck
+
+import { defineProps, computed, inject, ref, defineEmits,onMounted } from "vue";
 import EditorBlock from "./editor-block.vue";
+import { useMenuDragger } from "./useMenuDragger";
+import deepcopy from 'deepcopy'
 const props = defineProps({
   modelValue: {
     type: Object,
   },
 });
-const data = computed(() => {
-  return props.modelValue;
+const emits = defineEmits(["update:modelValue"]);
+const data = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(newValue) {
+    emits("update:modelValue", deepcopy(newValue) );
+  },
 });
 
 const containerStyles = computed(() => ({
@@ -44,6 +64,11 @@ const containerStyles = computed(() => ({
 
 const config = inject("config");
 const componentList = config.componentList;
+
+const containerRef = ref(null);
+
+// 实现菜单的拖拽功能
+const {dragstart,dragend} = useMenuDragger(containerRef,data)
 </script>
 
 <style lang="scss" scoped>
@@ -63,7 +88,7 @@ const componentList = config.componentList;
     &-item {
       position: relative;
       width: 250px;
-      margin:20px auto;
+      margin: 20px auto;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -73,17 +98,17 @@ const componentList = config.componentList;
       cursor: move;
       user-select: none;
       min-height: 100px;
-      > span{
+      > span {
         position: absolute;
         top: 0;
         left: 0;
-        background-color: rgb(96,205,224);
-        color:#fff;
-        padding: 4px
+        background-color: rgb(96, 205, 224);
+        color: #fff;
+        padding: 4px;
       }
-      &::after{
-        content:"";
-        position:absolute;
+      &::after {
+        content: "";
+        position: absolute;
         top: 0;
         left: 0;
         right: 0;

@@ -1,11 +1,13 @@
 <template>
-  <div class="editor-block" :style="blockStyles">
+  <div class="editor-block" :style="blockStyles" ref="blockRef">
     <RenderComponent />
   </div>
 </template>
 
 <script setup>
-import { defineProps, computed, inject } from "vue";
+// @ts-nocheck
+
+import { defineProps, computed, inject, onMounted, ref } from "vue";
 
 const props = defineProps({
   block: {
@@ -23,6 +25,16 @@ const config = inject("config");
 const component = config.componentMap[props.block?.key];
 const RenderComponent = component.render();
 
+const blockRef = ref(null);
+// 让拖拽的元素居中
+onMounted(() => {
+  let { offsetWidth, offsetHeight } = blockRef.value;
+  if (props.block.alignCenter) {
+    props.block.left = props.block.left - offsetWidth / 2;
+    props.block.top = props.block.top - offsetHeight / 2;
+    props.block.alignCenter = false; // 让渲染后的结果才能去居中
+  }
+});
 </script>
 
 <style lang="scss" scoped>
