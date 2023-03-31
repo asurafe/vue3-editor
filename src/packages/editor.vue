@@ -31,11 +31,21 @@
           :style="containerStyles"
           @mousedown="containerMouseDown"
         >
-          <div v-for="block in data.blocks">
+          <div
+            v-if="markLine.x"
+            class="line-x"
+            :style="{ left: markLine.x + 'px' }"
+          ></div>
+          <div
+            v-if="markLine.y"
+            class="line-y"
+            :style="{ top: markLine.y + 'px' }"
+          ></div>
+          <div v-for="(block, index) in data.blocks">
             <EditorBlock
               :block="block"
               :class="{ 'editor-block-focus': block.focus }"
-              @mousedown="(e) => blockMouseDown(e, block)"
+              @mousedown="(e) => blockMouseDown(e, block, index)"
             ></EditorBlock>
           </div>
         </div>
@@ -82,16 +92,14 @@ const containerRef = ref(null);
 const { dragstart, dragend } = useMenuDragger(containerRef, data);
 
 // 2.实现获取焦点，选中后就可以进行拖拽了
-const { blockMouseDown, focusData, containerMouseDown } = useFocus(
-  data,
-  (e) => {
+const { blockMouseDown, focusData, containerMouseDown, lastSelectBlock } =
+  useFocus(data, (e) => {
     // 获取焦点后进行拖拽
     mousedown(e);
-  }
-);
+  });
 
 // 3.实现组件拖拽
-const { mousedown } = useBlockDragger(focusData);
+const { mousedown, markLine } = useBlockDragger(focusData, lastSelectBlock);
 </script>
 
 <style lang="scss" scoped>
@@ -181,5 +189,17 @@ const { mousedown } = useBlockDragger(focusData);
   &::after {
     border: 2px dashed red;
   }
+}
+.line-x {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px dashed red;
+}
+.line-y {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px dashed red;
 }
 </style>
