@@ -18,7 +18,16 @@
       </div>
     </div>
     <!-- 菜单栏 -->
-    <div class="editor-top"></div>
+    <div class="editor-top">
+      <div
+        v-for="(item, index) in buttons"
+        class="editor-top-button"
+        @click="item.handler"
+      >
+        <i :class="item.icon"></i>
+        <span>{{ item.label }}</span>
+      </div>
+    </div>
     <!-- 属性控制栏目 -->
     <div class="editor-right"></div>
     <div class="editor-container">
@@ -88,6 +97,19 @@ const componentList = config.componentList;
 
 const containerRef = ref(null);
 
+const buttons = [
+  {
+    label: "撤销",
+    icon: "iconfont icon-chexiao",
+    handler: () => console.log("撤销"),
+  },
+  {
+    label: "重做",
+    icon: "iconfont icon-zhongzuo",
+    handler: () => console.log("重做"),
+  },
+];
+
 // 1.实现菜单的拖拽功能
 const { dragstart, dragend } = useMenuDragger(containerRef, data);
 
@@ -110,7 +132,6 @@ const { mousedown, markLine } = useBlockDragger(focusData, lastSelectBlock);
   &-right {
     position: absolute;
     width: 270px;
-    background-color: #f00;
     top: 0;
     bottom: 0;
   }
@@ -157,7 +178,24 @@ const { mousedown, markLine } = useBlockDragger(focusData, lastSelectBlock);
     left: 280px;
     right: 280px;
     height: 80px;
-    background-color: blue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &-button {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.3);
+      user-select: none;
+      cursor: pointer;
+      flex-direction: column;
+      color: #fff;
+      & + & {
+        margin-left: 3px;
+      }
+    }
   }
   &-container {
     padding: 80px 270px 0;
