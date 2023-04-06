@@ -71,6 +71,7 @@ import EditorBlock from "./editor-block.vue";
 import { useMenuDragger } from "./useMenuDragger";
 import { useFocus } from "./useFocus";
 import { useBlockDragger } from "./useBlockDragger";
+import { useCommand } from "./useCommand";
 import deepcopy from "deepcopy";
 const props = defineProps({
   modelValue: {
@@ -96,17 +97,21 @@ const config = inject("config");
 const componentList = config.componentList;
 
 const containerRef = ref(null);
+// 操作栈
+const { commands } = useCommand(data);
 
+
+// 菜单栏
 const buttons = [
   {
     label: "撤销",
     icon: "iconfont icon-chexiao",
-    handler: () => console.log("撤销"),
+    handler: () => commands.undo(),
   },
   {
     label: "重做",
     icon: "iconfont icon-zhongzuo",
-    handler: () => console.log("重做"),
+    handler: () => commands.redo(),
   },
 ];
 
