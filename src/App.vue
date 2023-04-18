@@ -17,6 +17,7 @@ provide("config", config);
 
 <style scoped lang="less">
 .app {
+  height: 100%;
   position: fixed;
   top: 20px;
   left: 20px;

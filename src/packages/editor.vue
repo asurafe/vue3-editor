@@ -131,6 +131,7 @@ const { mousedown, markLine } = useBlockDragger(focusData, lastSelectBlock);
 
 <style lang="scss" scoped>
 .editor {
+  display: flex;
   width: 100%;
   height: 100%;
   &-left,
