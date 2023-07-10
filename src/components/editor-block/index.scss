@@ -1,0 +1,30 @@
+@import "../../config/var-style.scss";
+
+.editor-block {
+  position: absolute;
+  user-select: none;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  &:hover:not(.block-focus) {
+    &::after {
+      border: 1px dashed $primary;
+    }
+  }
+  &.block-focus {
+    &::after {
+      border: 1px solid $primary;
+    }
+  }
+  &.block-preview {
+    &::after {
+      display: none;
+    }
+  }
+
+}

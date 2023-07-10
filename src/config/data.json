@@ -1,0 +1,51 @@
+{
+  "container": {
+    "width": "1300px",
+    "height": "calc(100vh - 85px)"
+  },
+  "blocks": [
+    {
+      "key": "text",
+      "top": "100px",
+      "left": "100px",
+      "zIndex": 1,
+      "props": {
+        "text": "文本测试",
+        "color": "#000",
+        "fontSize": "14px"
+      },
+      "width": "56px",
+      "height": "21px",
+      "focus": false
+    },
+    {
+      "key": "input",
+      "top": "200px",
+      "left": "200px",
+      "zIndex": 1,
+      "model": {
+        "default": "userName"
+      },
+      "props": {},
+      "width": "100px",
+      "height": "32px",
+      "focus": false
+    },
+    {
+      "key": "button",
+      "top": "300px",
+      "left": "400px",
+      "zIndex": 1,
+      "props": {
+        "text": "按钮",
+        "color": "#fff",
+        "fontSize": "14px",
+        "type": "primary",
+        "size": "small"
+      },
+      "width": "200px",
+      "height": "200px",
+      "focus": false
+    }
+  ]
+}

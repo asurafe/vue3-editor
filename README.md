@@ -1,7 +1,17 @@
 # Vue 3 + Vite
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+* 开发低代码平台，以数据驱动编辑器页面 低代码开发平台（LCDP）：开发者不需要传统的手写代码的方式进行编程，采用图形化拖拽的方式，配置参数完成开发工作低代码核心：降低重复劳动（营销活动、中后台系统） 组成：组件区、编辑区／预览区、属性区／事件区。通过拖拽组件生成JSON，通过JSON渲染出页面（采用JsonSchema描述页面）
 
-## Recommended IDE Setup
+### Project setup
+``` 
+pnpm install
+```
+### Compiles and hot-reloads for development
+```
+pnpm run dev
+```
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+### Compiles and minifies for production
+```
+pnpm run build
+```
