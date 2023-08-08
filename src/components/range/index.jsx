@@ -1,5 +1,5 @@
-import "./index.scss"
-import { computed, defineComponent } from "vue" 
+import "./index.scss";
+import { computed, defineComponent } from "vue";
 
 export default defineComponent({
   name: "Range",
@@ -9,35 +9,34 @@ export default defineComponent({
     },
     end: {
       type: Number,
-    }
+    },
   },
-  emits: [
-    "update:start",
-    "update:end"
-  ],
-  setup(props,ctx) {
+  emits: ["update:start", "update:end"],
+  setup(props, ctx) {
     const start = computed({
-      get(){
-        return props.start
+      get() {
+        return props.start;
       },
       set(newValue) {
-        ctx.emit("update:start",newValue)
-      }
-    })
+        ctx.emit("update:start", newValue);
+      },
+    });
     const end = computed({
-      get(){
-        return props.end
+      get() {
+        return props.end;
       },
       set(newValue) {
-        ctx.emit("update:end",newValue)
-      }
-    })
+        ctx.emit("update:end", newValue);
+      },
+    });
     return () => {
-      return <div class="range">
-        <input type="text" v-model={start.value}></input>
-        <span>~</span>
-        <input type="text" v-model={end.value}></input>
-      </div>
-    }
-  }
-})
+      return (
+        <div class="range">
+          <input type="text" v-model={start.value}></input>
+          <span>~</span>
+          <input type="text" v-model={end.value}></input>
+        </div>
+      );
+    };
+  },
+});
